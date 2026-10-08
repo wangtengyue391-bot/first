@@ -1,7 +1,7 @@
 # 方向五：成本受控、可复现的 LLM 与 OR 评测体系 —— 研究方案
 
 > 对应《LLM 与 OR 研究方向报告》（2026-09-10）第五节。
-> 本文按组会板书要求组织：〈1〉问题定义（业务定义 / 数学定义）→〈2〉调研现状（AAAI、NeurIPS、arXiv 及 ABS 三星以上期刊，2023—2026，40+ 篇）→〈3〉要解决的问题 →〈4〉技术路线。
+> 本文按组会板书要求组织：〈1〉问题定义（业务定义 / 数学定义）→〈2〉调研现状（以 AAAI、NeurIPS、ICML、ICLR 等 AI 会议和 arXiv 为主，2023—2026，55 篇）→〈3〉要解决的问题 →〈4〉技术路线。
 > 撰写日期：2026-10-08
 
 ---
@@ -114,112 +114,124 @@ $$
 
 ## 〈2〉调研现状
 
-### 2.1 检索策略（对应板书"AAAI、NeurIPS、arXiv、ABS…，2023—2026"）
+### 2.1 检索策略（对应板书"AAAI、NeurIPS、arXiv…，2023—2026"）
+
+LLM 与 OR 交叉方向的成果主要发表在 **AI 顶会**和 **arXiv 预印本**上，OR 期刊上的同类论文目前很少，因此本次调研以 AI 会议和 arXiv 为主要来源。
 
 | 项目 | 设置 |
 |---|---|
-| 来源 | AI 顶会：NeurIPS、ICML、ICLR、AAAI、IJCAI、KDD、GECCO；预印本：arXiv（cs.AI / cs.LG / math.OC）；期刊：**ABS（AJG 2024）三星及以上** OR/OM 期刊（*Operations Research* 4\*、*Management Science* 4\*、*M&SOM* 4、*EJOR* 4、*INFORMS J. Computing* 3、*IJPR* 3、*C&OR* 3、*Annals of OR* 3、*JORS* 3、*Omega* 3、*Transportation Science* 4），以及 ABS 不覆盖但领域公认的期刊（*Nature*、*ACM CSUR*、*IEEE TEVC*、*TMLR*） |
+| 会议 | NeurIPS（含 Datasets & Benchmarks Track）、ICML、ICLR、AAAI、IJCAI、KDD、GECCO、PPSN、EMNLP |
+| 预印本 | arXiv：cs.AI、cs.LG、cs.CL、cs.NE、math.OC |
+| 其他 | 领域内影响大的期刊论文仅作补充（如 *Nature* 的 FunSearch、*TMLR* 的评测方法论） |
 | 时间 | 2023-01 至 2026-09 |
-| 关键词 | ("large language model" OR LLM OR GPT) AND (optimization modeling OR operations research OR combinatorial optimization OR heuristic design OR scheduling) AND (benchmark OR evaluation OR reproducib\* OR cost) |
-| 纳入 | 提出基准/评测协议；或提出方法且实验设计对评测有启示；或讨论成本/可复现性 |
-| 排除 | 仅把 LLM 用于文本问答、与优化无关；无实验的观点文章（综述除外） |
+| 关键词 | ("large language model" OR LLM) AND (optimization modeling OR operations research OR combinatorial optimization OR heuristic design OR scheduling) AND (benchmark OR evaluation OR reproducib\* OR cost OR efficiency) |
+| 纳入 | 提出基准或评测协议；提出方法且实验设计对评测有启示；讨论 LLM 评测的成本、方差、可复现性 |
+| 排除 | 仅把 LLM 用于文本问答、与优化无关；无实验的观点文章（综述与立场论文除外） |
 
-**一个值得写进论文的检索发现**：截至 2026 年 9 月，ABS 三星以上 OR 期刊中**直接研究 LLM 求解/建模的论文仍很少**（最有代表性的是 *Operations Research* 上的 ORLM），大部分工作发表在 AI 会议和 arXiv。与此同时，*Management Science*、*INFORMS JoC* 等期刊已有强制或鼓励公开代码与数据的政策。**OR 期刊要求可复现，而 LLM-OR 研究的主阵地缺少可复现的评测规范**，这正是本方向在期刊层面的切入点。
+### 2.2 文献清单（2023—2026，共 55 篇）
 
-### 2.2 文献清单（2023—2026，共 46 篇）
+> 标注：【会】= AI 会议；【预】= arXiv 预印本；【刊】= 期刊（含 TMLR）。
 
-> 标注：【ABS】= ABS 三星及以上期刊；【会】= AI 顶会；【刊】= 其他期刊；【预】= arXiv 预印本。
+**A. 综述与评测方法论（12 篇）**
 
-**A. 综述、元研究与评测方法论（10 篇）**
-
-1. Da Ros, F., Soprano, M., Di Gaspero, L., Roitero, K. (2025). Large Language Models for Combinatorial Optimization: A Systematic Review. *ACM Computing Surveys* 58. 【刊】
-2. Xiao, Z. et al. (2025). A Survey of Optimization Modeling Meets LLMs: Progress and Future Directions. *IJCAI 2025* (Survey Track), 10742–10750. 【会】
-3. Wu, X., Wu, S.-H., Wu, J., Feng, L., Tan, K. C. (2024/2025). Evolutionary Computation in the Era of Large Language Model: Survey and Roadmap. *IEEE Transactions on Evolutionary Computation*. 【刊】
-4. Liu, F. et al. (2024). A Systematic Survey on Large Language Models for Algorithm Design. arXiv:2410.14716. 【预】
-5. De Bock, K. W. et al. (2024). Explainable AI for Operational Research: A Defining Framework, Methods, Applications, and a Research Agenda. *European Journal of Operational Research* 317(2), 249–272. 【ABS 4】
-6. Kapoor, S., Stroebl, B., Siegel, Z., Nadgir, N., Narayanan, A. (2025). AI Agents That Matter. *TMLR*（arXiv:2407.01502）。【刊】
+1. Da Ros, F., Soprano, M., Di Gaspero, L., Roitero, K. (2025). Large Language Models for Combinatorial Optimization: A Systematic Review. arXiv:2507.03637（正式版：*ACM Computing Surveys* 58）。【预】
+2. Xiao, Z. et al. (2025). A Survey of Optimization Modeling Meets LLMs: Progress and Future Directions. *IJCAI 2025* Survey Track, 10742–10750. 【会】
+3. Liu, F. et al. (2024). A Systematic Survey on Large Language Models for Algorithm Design. arXiv:2410.14716. 【预】
+4. Wang & Li (2025). Large Language Models in Operations Research: Methods, Applications, and Challenges. arXiv:2509.18180. 【预】
+5. Large Language Models for Operations Research: A Comprehensive Survey (2026). arXiv:2605.20849. 【预】
+6. Kapoor, S., Stroebl, B., Siegel, Z., Nadgir, N., Narayanan, A. (2024/2025). AI Agents That Matter. arXiv:2407.01502（*TMLR* 2025）。【预】
 7. Biderman, S. et al. (2024). Lessons from the Trenches on Reproducible Evaluation of Language Models. arXiv:2405.14782. 【预】
 8. Liang, P. et al. (2023). Holistic Evaluation of Language Models (HELM). *TMLR*. 【刊】
-9. Wang & Li (2025). Large Language Models in Operations Research: Methods, Applications, and Challenges. arXiv:2509.18180. 【预】
-10. Large Language Models for Operations Research: A Comprehensive Survey (2026). arXiv:2605.20849. 【预】
+9. Maia Polo, F. et al. (2024). tinyBenchmarks: Evaluating LLMs with Fewer Examples. *ICML 2024*, PMLR 235. 【会】
+10. Miller, E. (2024). Adding Error Bars to Evals: A Statistical Approach to Language Model Evaluations. arXiv:2411.00640. 【预】
+11. Kambhampati, S. et al. (2024). Position: LLMs Can't Plan, But Can Help Planning in LLM-Modulo Frameworks. *ICML 2024*. 【会】
+12. Valmeekam, K. et al. (2023). PlanBench: An Extensible Benchmark for Evaluating Large Language Models on Planning and Reasoning about Change. *NeurIPS 2023* Datasets & Benchmarks. 【会】
 
-**B. 自然语言→优化建模：基准与方法（14 篇）**
+**B. 自然语言→优化建模：基准与方法（17 篇）**
 
-11. Ramamonjison, R. et al. (2023). NL4Opt Competition: Formulating Optimization Problems Based on Their Natural Language Descriptions. *PMLR 220*（NeurIPS 2022 Competition Track）。【会】
-12. AhmadiTeshnizi, A., Gao, W., Udell, M. (2024). OptiMUS: Scalable Optimization Modeling with (MI)LP Solvers and Large Language Models. *ICML 2024*. 【会】
-13. Xiao, Z. et al. (2024). Chain-of-Experts: When LLMs Meet Complex Operations Research Problems. *ICLR 2024*. 【会】
-14. Huang, C., Tang, Z., Hu, S., Jiang, R., Zheng, X., Ge, D., Wang, B., Wang, Z. (2025). ORLM: A Customizable Framework in Training Large Models for Automated Optimization Modeling. *Operations Research* 73(6), 2986–3009. doi:10.1287/opre.2024.1233 【ABS 4\*】
-15. Yang, Z. et al. (2025). OptiBench Meets ReSocratic: Measure and Improve LLMs for Optimization Modeling. *ICLR 2025*. 【会】
-16. Lu, H., Xie, Z., Wu, Y., Ren, C., Chen, Y., Wen, Z. (2025). OptMATH: A Scalable Bidirectional Data Synthesis Framework for Optimization Modeling. *ICML 2025*, PMLR 267. 【会】
-17. Chen, Y., Xia, J., Shao, S., Ge, D., Ye, Y. (2025). Solver-Informed RL: Grounding Large Language Models for Authentic Optimization Modeling. *NeurIPS 2025*. 【会】
-18. Astorga, N., Liu, T., Xiao, Y., van der Schaar, M. (2025). Autoformulation of Mathematical Optimization Models Using LLMs. *ICML 2025*. 【会】
-19. Jiang, C. et al. (2025). LLMOPT: Learning to Define and Solve General Optimization Problems from Scratch. *ICLR 2025*. 【会】
-20. Wasserkrug, S. et al. (2025). Enhancing Decision Making Through the Integration of Large Language Models and Operations Research Optimization. *AAAI 2025*. 【会】
-21. Bertsimas, D., Margaritis, G. (2025). Robust and Adaptive Optimization under a Large Language Model Lens. arXiv:2501.00568. 【预】
-22. Chen, H., Constante-Flores, G. E., Li, C. (2024). Diagnosing Infeasible Optimization Problems Using Large Language Models. *INFOR* 62, 573–587. 【刊】
-23. Liang, K. et al. (2026). Large-Scale Optimization Model Auto-Formulation: Harnessing LLM Flexibility via Structured Workflow（LEAN-LLM-OPT）. arXiv:2601.09635. 【预】
-24. Li, B., Mellou, K., Zhang, B., Pathuri, J., Menache, I. (2023). Large Language Models for Supply Chain Optimization（OptiGuide）. arXiv:2307.03875. 【预】
+13. Ramamonjison, R. et al. (2023). NL4Opt Competition: Formulating Optimization Problems Based on Their Natural Language Descriptions. *PMLR 220*（NeurIPS 2022 Competition Track）。【会】
+14. AhmadiTeshnizi, A., Gao, W., Udell, M. (2024). OptiMUS: Scalable Optimization Modeling with (MI)LP Solvers and Large Language Models. *ICML 2024*. 【会】
+15. Xiao, Z. et al. (2024). Chain-of-Experts: When LLMs Meet Complex Operations Research Problems. *ICLR 2024*. 【会】
+16. Huang, C., Tang, Z., Hu, S., Jiang, R., Zheng, X., Ge, D., Wang, B., Wang, Z. (2024). ORLM: Training Large Language Models for Optimization Modeling. arXiv:2405.17743（正式版：*Operations Research* 73(6), 2025）。【预】
+17. Huang, X., Shen, Q., Hu, Y., Gao, A., Wang, B. (2024). Mamo: A Mathematical Modeling Benchmark with Solvers. arXiv:2405.13144. 【预】
+18. Yang, Z. et al. (2025). OptiBench Meets ReSocratic: Measure and Improve LLMs for Optimization Modeling. *ICLR 2025*. 【会】
+19. Lu, H., Xie, Z., Wu, Y., Ren, C., Chen, Y., Wen, Z. (2025). OptMATH: A Scalable Bidirectional Data Synthesis Framework for Optimization Modeling. *ICML 2025*, PMLR 267. 【会】
+20. Chen, Y., Xia, J., Shao, S., Ge, D., Ye, Y. (2025). Solver-Informed RL: Grounding Large Language Models for Authentic Optimization Modeling. *NeurIPS 2025*. 【会】
+21. Astorga, N., Liu, T., Xiao, Y., van der Schaar, M. (2025). Autoformulation of Mathematical Optimization Models Using LLMs. *ICML 2025*. 【会】
+22. Jiang, C. et al. (2025). LLMOPT: Learning to Define and Solve General Optimization Problems from Scratch. *ICLR 2025*. 【会】
+23. Wasserkrug, S. et al. (2025). Enhancing Decision Making Through the Integration of Large Language Models and Operations Research Optimization. *AAAI 2025*. 【会】
+24. Ma, Z., Guo, H., Chen, J., Peng, G., Cao, Z., Ma, Y., Gong, Y.-J. (2024). LLaMoCo: Instruction Tuning of Large Language Models for Optimization Code Generation. arXiv:2403.01131. 【预】
+25. Chen et al. (2026). OPT-Engine: Benchmarking the Limits of LLMs in Optimization Modeling via Complexity Scaling. arXiv:2601.19924. 【预】
+26. Liang, K. et al. (2026). Large-Scale Optimization Model Auto-Formulation: Harnessing LLM Flexibility via Structured Workflow（LEAN-LLM-OPT）. arXiv:2601.09635. 【预】
+27. Chen, H. et al. (2025). OptiChat: Bridging Optimization Models and Practitioners with Large Language Models. arXiv:2501.08406. 【预】
+28. Li, B., Mellou, K., Zhang, B., Pathuri, J., Menache, I. (2023). Large Language Models for Supply Chain Optimization（OptiGuide）. arXiv:2307.03875. 【预】
+29. Bertsimas, D., Margaritis, G. (2025). Robust and Adaptive Optimization under a Large Language Model Lens. arXiv:2501.00568. 【预】
 
-**C. LLM 自动启发式 / 算法设计（10 篇）**
+**C. LLM 自动启发式 / 算法设计（13 篇）**
 
-25. Romera-Paredes, B. et al. (2023). Mathematical Discoveries from Program Search with Large Language Models（FunSearch）. *Nature* 625, 468–475. 【刊】
-26. Liu, F. et al. (2024). Evolution of Heuristics: Towards Efficient Automatic Algorithm Design Using LLM（EoH）. *ICML 2024*. 【会】
-27. Ye, H., Wang, J., Cao, Z., Song, G. et al. (2024). ReEvo: Large Language Models as Hyper-Heuristics with Reflective Evolution. *NeurIPS 2024*. 【会】
-28. Liu, F. et al. (2025). EoH-S: Evolution of Heuristic Set Using LLMs for Automated Heuristic Design. *AAAI*（arXiv:2508.03082，届次以正式出版为准）. 【会】
-29. Zheng, Z., Xie, Z., Wang, Z., Hooi, B. (2025). Monte Carlo Tree Search for Comprehensive Exploration in LLM-Based Automatic Heuristic Design（MCTS-AHD）. *ICML 2025*. 【会】
-30. Dat, P. V. T., Doan, L., Binh, H. T. T. (2025). HSEvo: Elevating Automatic Heuristic Design with Diversity-Driven Harmony Search and Genetic Algorithm Using LLMs. *AAAI 2025*. 【会】
-31. van Stein, N., Bäck, T. (2025). LLaMEA: A Large Language Model Evolutionary Algorithm for Automatically Generating Metaheuristics. *IEEE TEVC*. 【刊】
-32. Zhang, R., Liu, F., Lin, X., Wang, Z., Lu, Z., Zhang, Q. (2024). Understanding the Importance of Evolutionary Search in Automated Heuristic Design with Large Language Models. *PPSN 2024*. 【会】
-33. Novikov, A. et al. (2025). AlphaEvolve: A Coding Agent for Scientific and Algorithmic Discovery. arXiv:2506.13131. 【预】
-34. Liu, F. et al. (2024). LLM4AD: A Platform for Algorithm Design with Large Language Model. arXiv:2412.17287. 【预】
+30. Romera-Paredes, B. et al. (2023). Mathematical Discoveries from Program Search with Large Language Models（FunSearch）. *Nature* 625, 468–475. 【刊】
+31. Liu, F. et al. (2024). Evolution of Heuristics: Towards Efficient Automatic Algorithm Design Using Large Language Model（EoH）. *ICML 2024*. 【会】
+32. Ye, H., Wang, J., Cao, Z., Song, G. et al. (2024). ReEvo: Large Language Models as Hyper-Heuristics with Reflective Evolution. *NeurIPS 2024*. 【会】
+33. Liu, F. et al. (2025). EoH-S: Evolution of Heuristic Set Using LLMs for Automated Heuristic Design. *AAAI*（arXiv:2508.03082）。【会】
+34. Zheng, Z., Xie, Z., Wang, Z., Hooi, B. (2025). Monte Carlo Tree Search for Comprehensive Exploration in LLM-Based Automatic Heuristic Design（MCTS-AHD）. *ICML 2025*. 【会】
+35. Dat, P. V. T., Doan, L., Binh, H. T. T. (2025). HSEvo: Elevating Automatic Heuristic Design with Diversity-Driven Harmony Search and Genetic Algorithm Using LLMs. *AAAI 2025*. 【会】
+36. Zhang, R., Liu, F., Lin, X., Wang, Z., Lu, Z., Zhang, Q. (2024). Understanding the Importance of Evolutionary Search in Automated Heuristic Design with Large Language Models. *PPSN 2024*. 【会】
+37. Novikov, A. et al. (2025). AlphaEvolve: A Coding Agent for Scientific and Algorithmic Discovery. arXiv:2506.13131. 【预】
+38. Liu, F. et al. (2024). LLM4AD: A Platform for Algorithm Design with Large Language Model. arXiv:2412.17287. 【预】
+39. Wu, X. et al. (2025). Efficient Heuristics Generation for Solving Combinatorial Optimization Problems Using Large Language Models. *KDD 2025*. 【会】
+40. Huang, Z., Wu, W., Wu, K., Wang, J., Lee, W.-B. (2025). CALM: Co-Evolution of Algorithms and Language Model for Automatic Heuristic Design. arXiv:2505.12285. 【预】
+41. Generalizable Heuristic Generation Through LLMs with Meta-Optimization (2025). arXiv:2505.20881（*ICLR 2026*）。【会】
+42. Rethinking LLM-Driven Heuristic Design: Generating Efficient and Specialized Solvers via Dynamics-Aware Optimization (2026). arXiv:2601.20868. 【预】
 
-**D. 组合优化 / 调度的 LLM 基准与直接求解（8 篇）**
+**D. 组合优化 / 调度的 LLM 基准与直接求解（9 篇）**
 
-35. Sun, W., Feng, S., Li, S., Yang, Y. (2025). CO-Bench: Benchmarking Language Model Agents in Algorithm Search for Combinatorial Optimization. arXiv:2504.04310. 【预】
-36. Chen, Hongzheng et al. (2025). HeuriGym: An Agentic Benchmark for LLM-Crafted Heuristics in Combinatorial Optimization. arXiv:2506.07972. 【预】
-37. Feng, S., Sun, W., Li, S., Talwalkar, A., Yang, Y. (2025). FrontierCO: Real-World and Large-Scale Evaluation of Machine Learning Solvers for Combinatorial Optimization. Preprint. 【预】
-38. Cao, S., Yuan, Y., Liu, J. (2026). DynaSchedBench: Calibrated Dynamic Scheduling Benchmarks and Observability Paradox in LLM-Based Scheduling Agents. arXiv:2605.27566. 【预】
-39. Yang, C. et al. (2024). Large Language Models as Optimizers（OPRO）. *ICLR 2024*（arXiv:2309.03409）。【会】
-40. Jiang, X., Wu, Y., Li, M., Cao, Z., Zhang, Y. (2025). Large Language Models as End-to-End Combinatorial Optimization Solvers. arXiv:2509.16865. 【预】
-41. Abgaryan, H., Harutyunyan, A., Cazenave, T. (2024). LLMs Can Schedule. arXiv:2408.06993. 【预】
-42. LLM-based manufacturing process planning approach under Industry 5.0 (2025). *International Journal of Production Research* 64(12). doi:10.1080/00207543.2025.2469285 【ABS 3】
+43. Sun, W., Feng, S., Li, S., Yang, Y. (2025). CO-Bench: Benchmarking Language Model Agents in Algorithm Search for Combinatorial Optimization. arXiv:2504.04310. 【预】
+44. Chen, Hongzheng et al. (2025). HeuriGym: An Agentic Benchmark for LLM-Crafted Heuristics in Combinatorial Optimization. arXiv:2506.07972. 【预】
+45. Feng, S., Sun, W., Li, S., Talwalkar, A., Yang, Y. (2025). FrontierCO: Real-World and Large-Scale Evaluation of Machine Learning Solvers for Combinatorial Optimization. Preprint. 【预】
+46. Cao, S., Yuan, Y., Liu, J. (2026). DynaSchedBench: Calibrated Dynamic Scheduling Benchmarks and Observability Paradox in LLM-Based Scheduling Agents. arXiv:2605.27566. 【预】
+47. Yang, C. et al. (2024). Large Language Models as Optimizers（OPRO）. *ICLR 2024*（arXiv:2309.03409）。【会】
+48. Iklassov, Z., Du, Y., Akimov, F., Takáč, M. (2024). Self-Guiding Exploration for Combinatorial Problems. *NeurIPS 2024*. 【会】
+49. Jiang, X., Wu, Y., Li, M., Cao, Z., Zhang, Y. (2025). Large Language Models as End-to-End Combinatorial Optimization Solvers. arXiv:2509.16865. 【预】
+50. Abgaryan, H., Harutyunyan, A., Cazenave, T. (2024). LLMs Can Schedule. arXiv:2408.06993. 【预】
+51. Jiang et al. (2025). DRoC: Elevating Large Language Models for Complex Vehicle Routing via Decomposed Retrieval of Constraints. *ICLR 2025*. 【会】
 
-**E. 成本、非确定性与 LLM 决策行为（4 篇）**
+**E. 成本、路由与非确定性（4 篇）**
 
-43. Chen, L., Zaharia, M., Zou, J. (2023/2024). FrugalGPT: How to Use Large Language Models While Reducing Cost and Improving Performance. *TMLR*（arXiv:2305.05176）。【刊】
-44. Ouyang, S., Zhang, J. M., Harman, M., Wang, M. (2025). An Empirical Study of the Non-Determinism of ChatGPT in Code Generation. *ACM TOSEM*. 【刊】
-45. Chen, Y., Kirshner, S. N., Ovchinnikov, A., Andiappan, M., Jenkin, T. (2025). A Manager and an AI Walk into a Bar: Does ChatGPT Make Biased Decisions Like We Do? *Manufacturing & Service Operations Management* 27(2), 354–368. 【ABS 4】
-46. Kambhampati, S. et al. (2024). Position: LLMs Can't Plan, But Can Help Planning in LLM-Modulo Frameworks. *ICML 2024*. 【会】
+52. Chen, L., Zaharia, M., Zou, J. (2023). FrugalGPT: How to Use Large Language Models While Reducing Cost and Improving Performance. arXiv:2305.05176（*TMLR* 2024）。【预】
+53. Ong, I. et al. (2024). RouteLLM: Learning to Route LLMs with Preference Data. arXiv:2406.18665（*ICLR 2025*）。【预】
+54. Atil, B. et al. (2024). LLM Stability: A Detailed Analysis with Some Surprises（Non-Determinism of "Deterministic" LLM Settings）. arXiv:2408.04667. 【预】
+55. Sainz, O. et al. (2023). NLP Evaluation in Trouble: On the Need to Measure LLM Data Contamination for Each Benchmark. *Findings of EMNLP 2023*. 【会】
 
-**方法论奠基文献（2023 年前，不计入 40 篇，但评测设计必须引用）**：Hooker (1995) *Testing Heuristics: We Have It All Wrong*, J. Heuristics；Dolan & Moré (2002) 性能剖面 (performance profiles), Math. Programming；Bartz-Beielstein et al. (2020) *Benchmarking in Optimization: Best Practice and Open Issues*, arXiv:2007.03488；López-Ibáñez, Branke, Paquete (2021) *Reproducibility in Evolutionary Computation*, ACM TELO；Gleixner et al. (2021) MIPLIB 2017, Math. Prog. Comp.
+**方法论奠基文献（2023 年前，不计入上述 55 篇）**：Hooker (1995) *Testing Heuristics: We Have It All Wrong*；Dolan & Moré (2002) 性能剖面 (performance profiles)；Bartz-Beielstein et al. (2020) *Benchmarking in Optimization: Best Practice and Open Issues*, arXiv:2007.03488；López-Ibáñez, Branke, Paquete (2021) *Reproducibility in Evolutionary Computation*, ACM TELO；Gleixner et al. (2021) MIPLIB 2017。
 
-> **说明**：标为"【预】"的文献在引用前应再查一次是否已正式发表（arXiv 版本号和录用状态会更新）；第 42 篇作者信息请以 DOI 页面为准；第 9、10 篇的作者请以 arXiv 页面为准。
+> **核对提示**：第 1、2、6、9、10、16、17、19、20、23、24、25、26、29、34、41、42、48 篇的出处已在线核实；其余条目的作者、届次在写入正式论文前请再查一次 arXiv/会议页面。第 4、5、25、41、42 篇作者请以 arXiv 页面为准。
 
 ### 2.3 综述：四条脉络
 
-**脉络一：基准从"文字题"走向"工业级、规模化"，但质量问题暴露出来。**
-NL4Opt [11] 奠定了"自然语言→LP"的评测范式，此后出现 MAMO、IndustryOR（随 ORLM [14] 发布）、OptiBench [15]、OptMATH-Bench [16]、LEAN-LLM-OPT 的大规模基准 [23] 等，难度和规模逐步提升。组合优化方面，CO-Bench [35]、HeuriGym [36]、FrontierCO [37] 引入了真实问题和大规模实例，DynaSchedBench [38] 把动态调度和"可观测性"纳入评测。**但 Xiao 等 [2] 审计发现主流建模基准存在"出人意料的高错误率"**，清洗数据后的排行榜与原排行榜明显不同。这说明**基准本身的正确性就是评测体系的第一道关**。
+**脉络一：基准从"文字题"走向"工业级、规模化"，但基准本身的质量问题暴露出来。**
+NL4Opt [13] 奠定了"自然语言→LP"的评测范式，此后 Mamo [17]、IndustryOR（随 ORLM [16] 发布）、OptiBench [18]、OptMATH-Bench [19]、LEAN-LLM-OPT 的大规模基准 [26] 和按复杂度扩展的 OPT-Engine [25] 依次出现，难度和规模逐步提升。组合优化方面，CO-Bench [43]、HeuriGym [44]、FrontierCO [45] 引入了真实问题和大规模实例，DynaSchedBench [46] 把动态调度和"可观测性"纳入评测。**但 Xiao 等 [2] 审计发现主流建模基准存在"出人意料的高错误率"**，清洗数据后的排行榜与原排行榜明显不同；OPT-Engine [25] 进一步指出约束的自动建模是主要瓶颈。这说明**基准本身的正确性是评测体系的第一道关**。
 
-**脉络二：评价指标单一，"最终目标值 / 正确率"占主导。**
-建模类工作 [12–19] 大多报告"最优值是否与标准答案一致"的准确率；启发式设计类 [25–33] 报告目标值或相对差距。只有少数工作把**可行率**（如 HeuriGym 的质量—产出综合指标 [36]）、**求解时间**纳入。系统综述 [1] 总结出领域普遍存在的问题：基准规模小、模型版本不统一、提示词不透明、依赖闭源模型、正面结果偏倚。Zhang 等 [32] 进一步表明，在 LLM 启发式设计中，如果不控制**评估次数和随机性**，方法之间的差异可能小于运行间方差，部分复杂设计带来的收益并不稳健。
+**脉络二：评价指标单一，以"最终目标值 / 正确率"为主。**
+建模类工作 [14–24] 大多报告"最优值是否与标准答案一致"的准确率；启发式设计类 [30–42] 报告目标值或相对差距。只有少数工作把**可行率**（如 HeuriGym [44] 的质量—产出综合指标）、**求解时间**纳入。系统综述 [1] 总结出领域普遍存在的问题：基准规模小、模型版本不统一、提示词不透明、依赖闭源模型、正面结果偏倚。Zhang 等 [36] 表明，在 LLM 启发式设计中，如果不控制**评估次数和随机性**，方法之间的差异可能小于运行间方差。"Rethinking LLM-Driven Heuristic Design" [42] 也指出，已有方法生成的启发式在运行效率上仍有很大改进空间，只看解质量会掩盖这一点。
 
 **脉络三：成本几乎不被当作一等指标。**
-FunSearch [25] 依赖数百万次 LLM 采样；AlphaEvolve [33] 等系统的算力投入难以复现。EoH [26]、ReEvo [27]、MCTS-AHD [29] 等虽然提及查询次数，但**很少把 API 费用、token 和时间放进同一张比较表**。AI 领域已有成熟的反思：Kapoor 等 [6] 证明，在 HumanEval 上简单的重复采样基线就能以低得多的成本匹敌复杂智能体，并提出**必须做成本受控评测、用"准确率—成本"Pareto 曲线比较**；FrugalGPT [43] 表明级联、路由能在大幅降低成本的同时保持性能；HELM [8] 把效率列为整体评测的维度之一。**这些思想尚未系统地迁移到 LLM-OR 领域**，这正是本方向的空白。
+FunSearch [30] 依赖数百万次 LLM 采样，AlphaEvolve [37] 的算力投入外部难以复现。EoH [31]、ReEvo [32]、MCTS-AHD [34] 等虽然提及查询次数，但**很少把 API 费用、token 和时间放进同一张比较表**。在通用 LLM 评测领域，这一问题已有成熟反思：Kapoor 等 [6] 证明，在 HumanEval 上简单的重复采样基线就能以低得多的成本匹敌复杂智能体，并提出**必须做成本受控评测、用"准确率—成本"Pareto 曲线比较**；FrugalGPT [52] 和 RouteLLM [53] 表明级联、路由能在大幅降低成本的同时保持性能；HELM [8] 把效率列为整体评测的维度之一；tinyBenchmarks [9] 用项目反应理论（IRT）把评测题量压缩到原来的很小一部分，同时保持估计精度。**这些思想尚未系统地迁移到 LLM-OR 领域**，这正是本方向的空白。
 
 **脉络四：可复现性受到"三重不确定"冲击。**
-① **模型不确定**：闭源模型同名不同版、会更新下线；即使温度设为 0，输出也不确定 [44]。② **流程不确定**：智能体工作流、提示词、求解器版本、时间上限、硬件各不相同 [7]。③ **数据不确定**：基准可能已进入预训练语料（数据污染），且基准本身可能有错 [2]。在 OR 期刊侧，*Operations Research* 上的 ORLM [14] 用开源 7B 模型做到了与 GPT-4 相当甚至更好的效果，其动机之一就是闭源模型的成本、隐私与可控性问题；*M&SOM* 上的研究 [45] 显示 LLM 的决策存在与人类相似的偏差且依情境变化，提示评测必须报告多次运行的分布，而不是单次结果。*EJOR* 的 XAIOR 框架 [5] 把"性能、可归因、负责任"作为 OR 中 AI 的三项要求，为把**解释忠实度**纳入评测提供了 OR 侧依据。LLM-Modulo 立场 [46] 和求解器反馈类方法（SIRL [17]、OptiMUS [12]）都主张**外部验证器把关**，这也是评测中"可行性由独立验证器判定"的理论依据。
+① **模型不确定**：闭源模型同名不同版、会更新下线；即使温度设为 0，输出也不确定 [54]。② **流程不确定**：智能体工作流、提示词、求解器版本、时间上限、硬件各不相同 [7]；Miller [10] 指出 LLM 评测应作为统计实验来分析，报告标准误、做配对比较与功效分析。③ **数据不确定**：基准可能进入预训练语料 [55]，且基准本身可能有错 [2]。ORLM [16] 用开源 7B 模型做到了与 GPT-4 相当甚至更好的效果，其动机之一就是闭源模型的成本、隐私与可控性问题，这也说明**开源模型可以作为可复现锚点**。LLM-Modulo 立场 [11] 和求解器反馈类方法（SIRL [20]、OptiMUS [14]）都主张**由外部验证器把关**，这是评测中"可行性由独立验证器判定"的依据。
 
 ### 2.4 现有基准对比（作者评估）
 
 | 基准 | 任务 | 质量/正确率 | 可行率 | 时间 | Token/费用 | 多次运行+置信区间 | 规模/OOD 分层 | 抗污染 | 确定性重放 |
 |---|---|---|---|---|---|---|---|---|---|
-| NL4Opt [11] | LP 建模 | ● | ○ | ○ | ○ | ○ | ○ | ○ | ○ |
-| MAMO / IndustryOR [14] | LP/MILP 建模 | ● | ○ | ○ | ○ | ○ | ◐ | ○ | ○ |
-| OptiBench [15] / OptMATH [16] | 建模 | ● | ◐ | ○ | ○ | ○ | ◐ | ◐ | ○ |
-| CO-Bench [35] | 启发式设计 | ● | ◐ | ◐ | ◐ | ◐ | ◐ | ○ | ○ |
-| HeuriGym [36] | 启发式设计 | ● | ● | ◐ | ◐ | ◐ | ◐ | ○ | ○ |
-| FrontierCO [37] | ML 求解器 | ● | ● | ● | ○ | ◐ | ● | ◐ | ○ |
-| DynaSchedBench [38] | 动态调度 | ● | ● | ◐ | ◐ | ◐ | ◐ | ○ | ○ |
+| NL4Opt [13] | LP 建模 | ● | ○ | ○ | ○ | ○ | ○ | ○ | ○ |
+| Mamo [17] / IndustryOR [16] | LP/MILP 建模 | ● | ○ | ○ | ○ | ○ | ◐ | ○ | ○ |
+| OptiBench [18] / OptMATH [19] | 建模 | ● | ◐ | ○ | ○ | ○ | ◐ | ◐ | ○ |
+| OPT-Engine [25] | 建模 | ● | ◐ | ○ | ○ | ○ | ● | ◐ | ○ |
+| CO-Bench [43] | 启发式设计 | ● | ◐ | ◐ | ◐ | ◐ | ◐ | ○ | ○ |
+| HeuriGym [44] | 启发式设计 | ● | ● | ◐ | ◐ | ◐ | ◐ | ○ | ○ |
+| FrontierCO [45] | ML 求解器 | ● | ● | ● | ○ | ◐ | ● | ◐ | ○ |
+| DynaSchedBench [46] | 动态调度 | ● | ● | ◐ | ◐ | ◐ | ◐ | ○ | ○ |
 | **本方案目标** | 三类统一 | ● | ● | ● | ● | ● | ● | ● | ● |
 
 ● 系统支持；◐ 部分支持或仅报告；○ 未涉及。该表基于论文公开描述的归纳，写入正式论文前需逐项核对原文。
@@ -320,12 +332,12 @@ flowchart LR
 - 输出：各方法、各预算档的失败模式分布图，回答"多花的钱主要修复了哪类错误"。
 
 **WP6 元评测：降低评测本身的成本（解决 P6）**
-- 用项目反应理论（IRT）估计每个实例的难度与区分度；
+- 借鉴 tinyBenchmarks [9]，用项目反应理论（IRT）估计每个实例的难度与区分度；
 - 自适应选题：只保留高区分度实例，并按方差动态分配重复次数；
 - 目标：在 Kendall $\tau\ge 0.9$ 的约束下，把评测开销降到全量评测的 20%—30% 以内，降低小团队的参与门槛。
 
 **WP7 大规模实证与开源**
-- 被测方法（10—15 种）：A 类 OptiMUS、Chain-of-Experts、ORLM、SIRL、OptMATH 训练模型、LLMOPT；B 类 FunSearch 复现版、EoH、ReEvo、MCTS-AHD、HSEvo、EoH-S（借助 LLM4AD 平台 [34] 统一实现）；C 类 OPRO、直接求解基线。
+- 被测方法（10—15 种）：A 类 OptiMUS、Chain-of-Experts、ORLM、SIRL、OptMATH 训练模型、LLMOPT；B 类 FunSearch 复现版、EoH、ReEvo、MCTS-AHD、HSEvo、EoH-S（借助 LLM4AD 平台 [38] 统一实现）；C 类 OPRO、直接求解基线。
 - 底座模型：至少 2 个闭源 + 2 个开源，覆盖不同价位。
 - 开源内容：代码、实例库、配置清单、LLM 响应缓存、排行榜（同时展示 Pareto 前沿和定预算排名）。
 
@@ -337,7 +349,7 @@ flowchart LR
 | 2 | 第 3—7 月 | WP1 实例库 + 数据审计；WP2 网关与沙箱 | 平台 α 版；基准审计报告 |
 | 3 | 第 6—10 月 | WP3、WP4 指标与成本受控协议；首批 5 种方法 | 首批 Pareto 结果 |
 | 4 | 第 9—14 月 | WP5 失败诊断；WP7 扩展到 10—15 种方法 | 主论文投稿（NeurIPS Datasets & Benchmarks / AAAI） |
-| 5 | 第 12—18 月 | WP6 元评测；OR 视角的方法论总结 | 期刊论文（*INFORMS JoC* / *EJOR*） |
+| 5 | 第 12—18 月 | WP6 元评测；方法论总结 | 第二篇会议论文（ICLR / ICML / AAAI），可选投 OR 期刊 |
 
 ### 4.4 验证方式：如何证明"评测体系本身有效"
 
@@ -358,8 +370,13 @@ flowchart LR
 
 ### 4.6 可投稿方向
 
-- **AI 会议**：NeurIPS Datasets & Benchmarks Track、ICLR、AAAI（平台 + 大规模实证）；
-- **OR 期刊**：*INFORMS Journal on Computing*（ABS 3，重视软件与可复现性）、*EJOR*（ABS 4，方法论与评测框架）、*Operations Research*（ABS 4\*，如能得出"成本受控下的结构性结论"）。
+与调研来源一致，以 AI 会议为主：
+
+- **首选**：NeurIPS Datasets & Benchmarks Track（平台 + 基准 + 大规模实证，与 PlanBench [12] 等工作同一赛道）；
+- **方法论文**：ICLR、ICML（成本受控评测协议、IRT 元评测方法）；AAAI、IJCAI（LLM-OR 应用与实证）；
+- **进化计算方向**：GECCO、PPSN（LLM 启发式设计的成本受控评测）；
+- **先挂 arXiv**：平台和排行榜先发布预印本并开源，持续更新版本以积累引用；
+- **可选**：成果成熟后可改写投 OR 期刊（如 *INFORMS Journal on Computing*，该刊重视软件与可复现性）。
 
 ---
 

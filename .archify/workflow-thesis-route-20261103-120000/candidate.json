@@ -1,0 +1,42 @@
+{
+  "schema_version": 2,
+  "diagram_type": "workflow",
+  "meta": {
+    "title": "开题技术路线：铁路施工风险致因与 AI 主动治理",
+    "locale": "zh-CN",
+    "visual_preset": "editorial",
+    "quality_profile": "showcase",
+    "output": ".archify/workflow-thesis-route-20261103-120000/thesis-route.html"
+  },
+  "lanes": [
+    { "id": "data", "label": "数据基础" },
+    { "id": "llm", "label": "大模型抽取" },
+    { "id": "human", "label": "人工质控", "variant": "exception" },
+    { "id": "mech", "label": "机理建模" },
+    { "id": "gov", "label": "治理应用" }
+  ],
+  "phases": [
+    { "id": "p_data", "label": "数据获取与抽取", "fromCol": 0, "toCol": 1 },
+    { "id": "p_qc", "label": "质量控制", "fromCol": 2, "toCol": 2, "variant": "dashed" },
+    { "id": "p_mech", "label": "风险机理揭示", "fromCol": 3, "toCol": 4, "variant": "emphasis" },
+    { "id": "p_gov", "label": "主动治理", "fromCol": 5, "toCol": 5 }
+  ],
+  "mainPath": ["reports", "extract", "verify", "network", "emerge", "govern"],
+  "nodes": [
+    { "id": "reports", "lane": "data", "col": 0, "type": "database", "label": "事故调查报告", "sublabel": "铁路施工事故文本" },
+    { "id": "extract", "lane": "llm", "col": 1, "type": "backend", "label": "大模型抽取致因", "sublabel": "致因要素与因果关系", "tag": "结构化输出" },
+    { "id": "verify", "lane": "human", "col": 2, "type": "security", "label": "人工抽样核验", "sublabel": "抽样比对与纠错", "tag": "质量把关", "icon": "person" },
+    { "id": "network", "lane": "mech", "col": 3, "type": "messagebus", "label": "风险传导网络", "sublabel": "致因节点与传导路径" },
+    { "id": "emerge", "lane": "mech", "col": 4, "type": "backend", "label": "涌现机制分析", "sublabel": "关键路径与耦合效应" },
+    { "id": "govern", "lane": "gov", "col": 5, "type": "cloud", "label": "AI 主动治理", "sublabel": "铁路施工场景", "tag": "预警与干预" }
+  ],
+  "edges": [
+    { "id": "e_in", "from": "reports", "to": "extract", "label": "文本输入", "variant": "default" },
+    { "id": "e_sample", "from": "extract", "to": "verify", "label": "抽取结果", "variant": "default" },
+    { "id": "e_fix", "from": "verify", "to": "extract", "label": "修正提示词", "variant": "security", "role": "return" },
+    { "id": "e_build", "from": "verify", "to": "network", "label": "核验通过", "variant": "emphasis" },
+    { "id": "e_analyze", "from": "network", "to": "emerge", "label": "网络分析", "variant": "emphasis" },
+    { "id": "e_apply", "from": "emerge", "to": "govern", "label": "治理靶点", "variant": "emphasis" },
+    { "id": "e_feedback", "from": "govern", "to": "network", "label": "反馈更新", "variant": "dashed", "role": "return" }
+  ]
+}

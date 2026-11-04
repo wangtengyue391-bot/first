@@ -1,5 +1,8 @@
-// 渲染 A3 海报：node render.mjs [scale]  → poster.png (默认 3.125x ≈ 300dpi) + poster.pdf
+// 渲染 A3 海报：
+//   node render.mjs      → poster.jpg（3509×4959，约 300dpi，质量 95；比赛要求 1MB–10MB）
+//   node render.mjs 1    → preview.png（1123×1587 预览）
 import { createRequire } from 'node:module';
+import { statSync } from 'node:fs';
 import path from 'node:path';
 import { fileURLToPath, pathToFileURL } from 'node:url';
 const require = createRequire(import.meta.url);
@@ -12,10 +15,12 @@ const page = await browser.newPage({ viewport: { width: 1123, height: 1587 }, de
 await page.goto(pathToFileURL(path.join(dir, 'poster.html')).href, { waitUntil: 'networkidle' });
 await page.evaluate(() => document.fonts.ready);
 await page.waitForFunction(() => !document.querySelector('svg#ink') || document.body.dataset.ready === '1');
-await page.locator('#poster').screenshot({ path: path.join(dir, scale === 1 ? 'preview.png' : 'poster.png') });
-if (scale !== 1) {
-  await page.addStyleTag({ content: '@page{size:297mm 420mm;margin:0} html,body{background:none}' });
-  await page.pdf({ path: path.join(dir, 'poster.pdf'), width: '297mm', height: '420mm', printBackground: true });
-}
+
+const out = path.join(dir, scale === 1 ? 'preview.png' : 'poster.jpg');
+await page.locator('#poster').screenshot(scale === 1 ? { path: out } : { path: out, type: 'jpeg', quality: 95 });
 await browser.close();
-console.log('done', scale);
+
+const size = statSync(out).size;
+console.log(`${path.basename(out)}  ${size.toLocaleString()} bytes`);
+if (scale !== 1 && (size <= 1024 * 1024 || size >= 10 * 1024 * 1024))
+  console.warn('⚠ 文件大小不在 1MB–10MB 之间，不符合投稿要求');

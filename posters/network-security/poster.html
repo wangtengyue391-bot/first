@@ -6,7 +6,7 @@
 <style>
   :root{
     --bg:#0E1A2E; --bg2:#16233F;
-    --ink:#E9EDF3; --dim:rgba(233,237,243,.52); --faint:rgba(233,237,243,.16);
+    --ink:#E9EDF3; --soft:rgba(233,237,243,.86); --dim:rgba(233,237,243,.55); --faint:rgba(233,237,243,.18);
     --red:#E2312B;
     --serif:"Noto Serif SC",serif; --sans:"Noto Sans SC",sans-serif; --mono:"JetBrains Mono","IBM Plex Mono",monospace;
   }
@@ -17,19 +17,19 @@
     color:var(--ink);font-family:var(--sans);-webkit-font-smoothing:antialiased}
   svg{position:absolute;inset:0}
 
-  .eyebrow{position:absolute;left:104px;top:118px;font:400 17px/1 var(--mono);letter-spacing:.32em;color:var(--dim)}
+  .eyebrow{position:absolute;left:104px;top:112px;font:400 17px/1 var(--mono);letter-spacing:.32em;color:var(--dim)}
   .eyebrow b{color:var(--red);font-weight:400}
-  .title{position:absolute;left:100px;top:178px;margin:0;font-family:var(--serif);font-weight:900;
+  .title{position:absolute;left:100px;top:166px;margin:0;font-family:var(--serif);font-weight:900;
     font-size:92px;line-height:1.26;letter-spacing:.04em;color:var(--ink)}
   .title .k{color:var(--red)}
-  .sub{position:absolute;left:104px;top:438px;font:300 25px/1.7 var(--sans);letter-spacing:.14em;color:var(--dim)}
+  .sub{position:absolute;left:104px;top:424px;font:400 33px/1.62 var(--sans);letter-spacing:.05em;color:var(--soft)}
+  .sub strong{font-weight:500;color:var(--ink)}
 
-  .foot{position:absolute;left:104px;right:104px;bottom:96px;border-top:1px solid var(--faint);padding-top:34px;
-    display:flex;justify-content:space-between;align-items:flex-end}
-  .tips{display:flex;gap:56px}
-  .tip{font:300 22px/1 var(--sans);letter-spacing:.16em;color:var(--ink)}
-  .tip i{display:block;font:400 13px/1 var(--mono);font-style:normal;letter-spacing:.24em;color:var(--dim);margin-bottom:14px}
-  .mark{text-align:right;font:300 15px/1.9 var(--sans);letter-spacing:.2em;color:var(--dim)}
+  .foot{position:absolute;left:104px;right:104px;bottom:82px;border-top:1px solid var(--faint);padding-top:30px}
+  .tips{display:grid;grid-template-columns:repeat(3,1fr);gap:28px}
+  .tip{font:400 25px/1.3 var(--sans);letter-spacing:.04em;color:var(--ink)}
+  .tip i{display:block;font:400 14px/1 var(--mono);font-style:normal;letter-spacing:.24em;color:var(--red);margin-bottom:12px}
+  .mark{margin-top:26px;font:300 15px/1 var(--sans);letter-spacing:.2em;color:var(--dim)}
   .mark span{font-family:var(--mono);letter-spacing:.24em}
 </style>
 </head>
@@ -39,15 +39,15 @@
 
   <div class="eyebrow">CYBER&nbsp;SECURITY&nbsp;&nbsp;/&nbsp;&nbsp;<b>●</b>&nbsp;网络安全</div>
   <h1 class="title">别让<span class="k">一根线</span>，<br>牵走整个你</h1>
-  <div class="sub">一次点击，一串验证码，一张随手晒出的截图</div>
+  <div class="sub">群里发来「研究生奖助金补录」链接？<br><strong>先从学校官网进入系统核实。</strong></div>
 
   <div class="foot">
     <div class="tips">
-      <div class="tip"><i>01</i>陌生链接不点</div>
-      <div class="tip"><i>02</i>验证码不外传</div>
-      <div class="tip"><i>03</i>个人信息不乱晒</div>
+      <div class="tip"><i>01</i>熟人发的链接也要核实</div>
+      <div class="tip"><i>02</i>学号密码只在官网输入</div>
+      <div class="tip"><i>03</i>验证码，谁要都不给</div>
     </div>
-    <div class="mark"><span>NO.02</span>　研究生安全海报设计大赛<br>参赛作品</div>
+    <div class="mark"><span>NO.02</span>　研究生安全海报设计大赛 · 参赛作品</div>
   </div>
 </div>
 
@@ -56,29 +56,55 @@
   const NS = 'http://www.w3.org/2000/svg';
   const svg = document.getElementById('art');
   const el = (n, a, p = svg) => { const e = document.createElementNS(NS, n); for (const k in a) e.setAttribute(k, a[k]); p.appendChild(e); return e; };
+  const fmt = n => n.toFixed(1);
 
   // seeded random
   let s = 20261104; const rnd = () => (s = (s * 1664525 + 1013904223) >>> 0) / 4294967296;
 
-  const cx = 540, cy = 955;            // fingerprint core
+  const cx = 540, cy = 985;              // fingerprint core
   const N = 30, gap = 10.6;              // ridges
-  const CUT = 17;                        // the ridge being pulled
-  const fmt = n => n.toFixed(1);
+  const CUT = 20;                        // the ridge being pulled out
+  const TP = -0.6, W = 0.27;            // where it is pulled (angle) and half-width of the pulled span
 
   // ridge point: loop pattern — taller arch on top, flatter bottom, slight core drift
-  function pt(i, t) {
+  function base(i, t) {
     const r = 14 + i * gap;
     const drift = Math.max(0, 6 - i) * 1.6;
-    const sy = Math.sin(t) < 0 ? 1.34 : 1.02;          // top (sin<0) is taller
+    const sy = Math.sin(t) < 0 ? 1.34 : 1.02;
     const wob = Math.sin(t * 3 + i * .9) * (1.2 + i * .05) + Math.sin(t * 5 - i * .4) * .8;
     return [cx - drift + (r * .86 + wob) * Math.cos(t), cy + drift * .4 + (r * sy + wob) * Math.sin(t)];
   }
-  function path(i, t0, t1, step = .02) {
-    let d = '';
-    for (let t = t0; t <= t1 + 1e-9; t += step) { const [x, y] = pt(i, t); d += (d ? 'L' : 'M') + fmt(x) + ' ' + fmt(y); }
-    return d;
+
+  // where the hook holds the thread: pushed out from the pulled point, away from the core
+  const P0 = base(CUT, TP);
+  const dir = (() => { const dx = P0[0] - cx, dy = P0[1] - cy, l = Math.hypot(dx, dy); return [dx / l + .18, dy / l]; })();
+  const H = [P0[0] + dir[0] * 215, P0[1] + dir[1] * 215];
+
+  const wrap = a => { a = (a + Math.PI) % (2 * Math.PI); if (a < 0) a += 2 * Math.PI; return a - Math.PI; };
+  const bump = (dt, w) => Math.abs(dt) >= w ? 0 : (Math.cos(Math.PI * dt / w) + 1) / 2;
+  const pullK = i => {
+    if (i === CUT) return 1;
+    const d = i - CUT;
+    if (d < 0) return [0, .17, .075, .03][-d] || 0;   // inner neighbours drag outward
+    return [0, .085, .045, .02][d] || 0;               // outer neighbours bow toward the hook
+  };
+  function pt(i, t) {
+    const p = base(i, t), k = pullK(i);
+    if (!k) return p;
+    const b = bump(wrap(t - TP), i === CUT ? W : W * 1.15);
+    const e = i === CUT ? Math.pow(b, .9) : b * k;
+    return [p[0] + (H[0] - p[0]) * e, p[1] + (H[1] - p[1]) * e];
   }
-  // data-like dash pattern: long runs broken by short bits (minutiae / bytes)
+
+  // the pulled span of the ridge, as points (for the red thread and for opening the gap)
+  const pulled = [];
+  for (let t = TP - W; t <= TP + W + 1e-9; t += .006) pulled.push(pt(CUT, t));
+  const nearThread = (p, r) => {
+    for (const q of pulled) if (Math.hypot(p[0] - q[0], p[1] - q[1]) < r) return true;
+    return false;
+  };
+
+  // data-like dash pattern
   function dashes() {
     const a = [];
     for (let k = 0; k < 40; k++) {
@@ -89,10 +115,20 @@
     }
     return a.map(fmt).join(' ');
   }
+  // sample a ridge into segments, skipping points the thread passes through
+  function segments(i, t0, t1, skip) {
+    const segs = []; let cur = [];
+    for (let t = t0; t <= t1 + 1e-9; t += .012) {
+      const p = pt(i, t);
+      if (skip(t, p)) { if (cur.length > 1) segs.push(cur); cur = []; continue; }
+      cur.push(p);
+    }
+    if (cur.length > 1) segs.push(cur);
+    return segs.map(seg => seg.map((p, k) => (k ? 'L' : 'M') + fmt(p[0]) + ' ' + fmt(p[1])).join(''));
+  }
 
   const defs = el('defs', {});
   const clip = el('clipPath', { id: 'pad' }, defs);
-  // finger pad outline: an egg shape, wider at bottom
   el('path', { d: `M${cx} ${cy - 400} C ${cx + 250} ${cy - 400}, ${cx + 300} ${cy - 120}, ${cx + 292} ${cy + 80}
                    C ${cx + 284} ${cy + 250}, ${cx + 170} ${cy + 345}, ${cx} ${cy + 345}
                    C ${cx - 170} ${cy + 345}, ${cx - 284} ${cy + 250}, ${cx - 292} ${cy + 80}
@@ -106,58 +142,30 @@
 
   const g = el('g', { 'clip-path': 'url(#pad)', mask: 'url(#soft)', fill: 'none', 'stroke-linecap': 'round' });
 
-  // the cut: angles where ridge CUT is missing (right side, lifted away)
-  const A0 = -0.95, A1 = 0.55;
-
   for (let i = 0; i < N; i++) {
-    const op = .78 - i * .006;
-    const w = 2.6;
-    // inner loops open toward lower-left like a real loop core
-    let t0 = 0, t1 = Math.PI * 2;
+    const op = .78 - i * .006, w = 2.6;
+    let t0 = TP + W, t1 = TP + W + Math.PI * 2;      // start right after the pulled span so the cut is clean
     if (i < 6) { t0 = Math.PI * .72 + i * .02; t1 = Math.PI * 2.62 - i * .02; }
-    if (i === CUT) {
-      el('path', { d: path(i, A1, A0 + Math.PI * 2), stroke: '#E9EDF3', 'stroke-opacity': op, 'stroke-width': w, 'stroke-dasharray': dashes() }, g);
-      continue;
-    }
-    el('path', { d: path(i, t0, t1), stroke: '#E9EDF3', 'stroke-opacity': op, 'stroke-width': w, 'stroke-dasharray': dashes() }, g);
+    let skip = () => false;
+    if (i === CUT) { t0 = TP + W; t1 = TP - W + Math.PI * 2; }
+    else if (i > CUT) skip = (t, p) => Math.abs(wrap(t - TP)) < W * 1.3 && nearThread(p, 8);
+    for (const d of segments(i, t0, t1, skip))
+      el('path', { d, stroke: '#E9EDF3', 'stroke-opacity': op, 'stroke-width': w, 'stroke-dasharray': dashes() }, g);
   }
 
-  // ---- fishing line + hook ----
-  const hx = 868, hookTop = 452;          // hook eye
-  const lineG = el('g', { fill: 'none', 'stroke-linecap': 'round', 'stroke-linejoin': 'round' });
-  el('line', { x1: hx, y1: 0, x2: hx, y2: hookTop - 14, stroke: '#E9EDF3', 'stroke-opacity': .55, 'stroke-width': 1.2 }, lineG);
-  // eye
-  el('circle', { cx: hx, cy: hookTop - 7, r: 7, stroke: '#E9EDF3', 'stroke-width': 3 }, lineG);
-  // shank + bend + point with barb
-  const bendY = hookTop + 150, R = 34;
-  el('path', { d: `M${hx} ${hookTop} L${hx} ${bendY} A ${R} ${R} 0 0 1 ${hx - 2 * R} ${bendY} L${hx - 2 * R} ${bendY - 46}`,
-               stroke: '#E9EDF3', 'stroke-width': 5.2 }, lineG);
-  el('path', { d: `M${hx - 2 * R} ${bendY - 46} L${hx - 2 * R - 10} ${bendY - 22}`, stroke: '#E9EDF3', 'stroke-width': 4 }, lineG);
+  // ---- fishing line + hook; the thread rests inside the bend ----
+  const R = 30, hx = H[0] + R, bendY = H[1] - R + 3, eyeY = bendY - 150;
+  const hg = el('g', { fill: 'none', 'stroke-linecap': 'round', 'stroke-linejoin': 'round', stroke: '#E9EDF3' });
 
-  // ---- the red thread: follows ridge CUT from its broken end, then lifts to the hook bend ----
-  const [sx, sy] = pt(CUT, A1);                 // where the remaining ridge ends (lower right)
-  let d = '';
-  for (let t = A1; t >= A0; t -= .02) { const [x, y] = pt(CUT, t); d += (d ? 'L' : 'M') + fmt(x) + ' ' + fmt(y); }
-  const [ex, ey] = pt(CUT, A0);
-  const hookBottom = [hx - R, bendY + R - 2];
-  d += ` C ${fmt(ex + 60)} ${fmt(ey - 110)}, ${fmt(hookBottom[0] - 70)} ${fmt(hookBottom[1] + 120)}, ${fmt(hookBottom[0])} ${fmt(hookBottom[1])}`;
-  el('path', { d, fill: 'none', stroke: '#E2312B', 'stroke-width': 3, 'stroke-linecap': 'round' });
-  el('circle', { cx: fmt(sx), cy: fmt(sy), r: 4.5, fill: '#E2312B' });
+  // red thread first, so the hook steel sits over it
+  const red = pulled.map((p, k) => (k ? 'L' : 'M') + fmt(p[0]) + ' ' + fmt(p[1])).join('');
+  el('path', { d: red, fill: 'none', stroke: '#E2312B', 'stroke-width': 3, 'stroke-linecap': 'round', 'stroke-linejoin': 'round' });
 
-  // ---- quiet reference markers ----
-  const lab = (x, y, txt, anchor = 'start', fill = 'rgba(233,237,243,.5)') =>
-    el('text', { x, y, 'text-anchor': anchor, fill, 'font-family': 'JetBrains Mono, monospace', 'font-size': 13, 'letter-spacing': 3 }).textContent = txt;
-  // leader from the broken end
-  el('line', { x1: fmt(sx + 10), y1: fmt(sy + 6), x2: 900, y2: fmt(sy + 6), stroke: 'rgba(233,237,243,.35)', 'stroke-width': 1 });
-  lab(908, sy + 10, 'RIDGE 18/30');
-  lab(908, sy + 32, 'UNTRACED', 'start', '#E2312B');
-  // crosshair at core
-  const cc = el('g', { stroke: 'rgba(233,237,243,.35)', 'stroke-width': 1 });
-  el('line', { x1: cx - 340, y1: cy, x2: cx - 318, y2: cy }, cc);
-  el('line', { x1: cx + 318, y1: cy, x2: cx + 340, y2: cy }, cc);
-  el('line', { x1: cx, y1: cy + 360, x2: cx, y2: cy + 380 }, cc);
-  lab(cx - 346, cy + 4, 'ID', 'end');
-  lab(cx, cy + 404, 'SUBJECT : YOU', 'middle');
+  el('line', { x1: hx, y1: 0, x2: hx, y2: eyeY - 7, 'stroke-opacity': .55, 'stroke-width': 1.2 }, hg);
+  el('circle', { cx: hx, cy: eyeY, r: 7, 'stroke-width': 3 }, hg);
+  el('path', { d: `M${fmt(hx)} ${fmt(eyeY + 7)} L${fmt(hx)} ${fmt(bendY)} A ${R} ${R} 0 0 1 ${fmt(hx - 2 * R)} ${fmt(bendY)} L${fmt(hx - 2 * R)} ${fmt(bendY - 44)}`,
+               'stroke-width': 5.2 }, hg);
+  el('path', { d: `M${fmt(hx - 2 * R)} ${fmt(bendY - 44)} L${fmt(hx - 2 * R - 10)} ${fmt(bendY - 21)}`, 'stroke-width': 4 }, hg);
 })();
 </script>
 </body>

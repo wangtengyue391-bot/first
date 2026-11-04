@@ -1,0 +1,164 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+<meta charset="utf-8">
+<title>别让一根线，牵走整个你</title>
+<style>
+  :root{
+    --bg:#0E1A2E; --bg2:#16233F;
+    --ink:#E9EDF3; --dim:rgba(233,237,243,.52); --faint:rgba(233,237,243,.16);
+    --red:#E2312B;
+    --serif:"Noto Serif SC",serif; --sans:"Noto Sans SC",sans-serif; --mono:"JetBrains Mono","IBM Plex Mono",monospace;
+  }
+  html,body{margin:0;background:#222}
+  /* A3 @96dpi = 1123 x 1587 css px */
+  #poster{position:relative;width:1123px;height:1587px;overflow:hidden;
+    background:radial-gradient(120% 80% at 50% 62%, var(--bg2) 0%, var(--bg) 70%);
+    color:var(--ink);font-family:var(--sans);-webkit-font-smoothing:antialiased}
+  svg{position:absolute;inset:0}
+
+  .eyebrow{position:absolute;left:104px;top:118px;font:400 17px/1 var(--mono);letter-spacing:.32em;color:var(--dim)}
+  .eyebrow b{color:var(--red);font-weight:400}
+  .title{position:absolute;left:100px;top:178px;margin:0;font-family:var(--serif);font-weight:900;
+    font-size:92px;line-height:1.26;letter-spacing:.04em;color:var(--ink)}
+  .title .k{color:var(--red)}
+  .sub{position:absolute;left:104px;top:438px;font:300 25px/1.7 var(--sans);letter-spacing:.14em;color:var(--dim)}
+
+  .foot{position:absolute;left:104px;right:104px;bottom:96px;border-top:1px solid var(--faint);padding-top:34px;
+    display:flex;justify-content:space-between;align-items:flex-end}
+  .tips{display:flex;gap:56px}
+  .tip{font:300 22px/1 var(--sans);letter-spacing:.16em;color:var(--ink)}
+  .tip i{display:block;font:400 13px/1 var(--mono);font-style:normal;letter-spacing:.24em;color:var(--dim);margin-bottom:14px}
+  .mark{text-align:right;font:300 15px/1.9 var(--sans);letter-spacing:.2em;color:var(--dim)}
+  .mark span{font-family:var(--mono);letter-spacing:.24em}
+</style>
+</head>
+<body>
+<div id="poster">
+  <svg id="art" width="1123" height="1587" viewBox="0 0 1123 1587"></svg>
+
+  <div class="eyebrow">CYBER&nbsp;SECURITY&nbsp;&nbsp;/&nbsp;&nbsp;<b>●</b>&nbsp;网络信息安全</div>
+  <h1 class="title">别让<span class="k">一根线</span>，<br>牵走整个你</h1>
+  <div class="sub">一次点击，一串验证码，一张随手晒出的截图</div>
+
+  <div class="foot">
+    <div class="tips">
+      <div class="tip"><i>01</i>陌生链接不点</div>
+      <div class="tip"><i>02</i>验证码不外传</div>
+      <div class="tip"><i>03</i>个人信息不乱晒</div>
+    </div>
+    <div class="mark"><span>NO.02</span>　研究生安全海报设计大赛<br>参赛作品</div>
+  </div>
+</div>
+
+<script>
+(() => {
+  const NS = 'http://www.w3.org/2000/svg';
+  const svg = document.getElementById('art');
+  const el = (n, a, p = svg) => { const e = document.createElementNS(NS, n); for (const k in a) e.setAttribute(k, a[k]); p.appendChild(e); return e; };
+
+  // seeded random
+  let s = 20261104; const rnd = () => (s = (s * 1664525 + 1013904223) >>> 0) / 4294967296;
+
+  const cx = 540, cy = 955;            // fingerprint core
+  const N = 30, gap = 10.6;              // ridges
+  const CUT = 17;                        // the ridge being pulled
+  const fmt = n => n.toFixed(1);
+
+  // ridge point: loop pattern — taller arch on top, flatter bottom, slight core drift
+  function pt(i, t) {
+    const r = 14 + i * gap;
+    const drift = Math.max(0, 6 - i) * 1.6;
+    const sy = Math.sin(t) < 0 ? 1.34 : 1.02;          // top (sin<0) is taller
+    const wob = Math.sin(t * 3 + i * .9) * (1.2 + i * .05) + Math.sin(t * 5 - i * .4) * .8;
+    return [cx - drift + (r * .86 + wob) * Math.cos(t), cy + drift * .4 + (r * sy + wob) * Math.sin(t)];
+  }
+  function path(i, t0, t1, step = .02) {
+    let d = '';
+    for (let t = t0; t <= t1 + 1e-9; t += step) { const [x, y] = pt(i, t); d += (d ? 'L' : 'M') + fmt(x) + ' ' + fmt(y); }
+    return d;
+  }
+  // data-like dash pattern: long runs broken by short bits (minutiae / bytes)
+  function dashes() {
+    const a = [];
+    for (let k = 0; k < 40; k++) {
+      const r = rnd();
+      if (r < .62) a.push(30 + rnd() * 120, 5 + rnd() * 5);
+      else if (r < .9) a.push(4 + rnd() * 6, 5 + rnd() * 4);
+      else a.push(1.5, 5);
+    }
+    return a.map(fmt).join(' ');
+  }
+
+  const defs = el('defs', {});
+  const clip = el('clipPath', { id: 'pad' }, defs);
+  // finger pad outline: an egg shape, wider at bottom
+  el('path', { d: `M${cx} ${cy - 400} C ${cx + 250} ${cy - 400}, ${cx + 300} ${cy - 120}, ${cx + 292} ${cy + 80}
+                   C ${cx + 284} ${cy + 250}, ${cx + 170} ${cy + 345}, ${cx} ${cy + 345}
+                   C ${cx - 170} ${cy + 345}, ${cx - 284} ${cy + 250}, ${cx - 292} ${cy + 80}
+                   C ${cx - 300} ${cy - 120}, ${cx - 250} ${cy - 400}, ${cx} ${cy - 400} Z` }, clip);
+  const fade = el('radialGradient', { id: 'fade', cx: cx, cy: cy - 40, r: 420, gradientUnits: 'userSpaceOnUse' }, defs);
+  el('stop', { offset: '0', 'stop-color': '#fff', 'stop-opacity': '1' }, fade);
+  el('stop', { offset: '.78', 'stop-color': '#fff', 'stop-opacity': '.85' }, fade);
+  el('stop', { offset: '1', 'stop-color': '#fff', 'stop-opacity': '0' }, fade);
+  const mask = el('mask', { id: 'soft' }, defs);
+  el('rect', { x: 0, y: 0, width: 1123, height: 1587, fill: 'url(#fade)' }, mask);
+
+  const g = el('g', { 'clip-path': 'url(#pad)', mask: 'url(#soft)', fill: 'none', 'stroke-linecap': 'round' });
+
+  // the cut: angles where ridge CUT is missing (right side, lifted away)
+  const A0 = -0.95, A1 = 0.55;
+
+  for (let i = 0; i < N; i++) {
+    const op = .78 - i * .006;
+    const w = 2.6;
+    // inner loops open toward lower-left like a real loop core
+    let t0 = 0, t1 = Math.PI * 2;
+    if (i < 6) { t0 = Math.PI * .72 + i * .02; t1 = Math.PI * 2.62 - i * .02; }
+    if (i === CUT) {
+      el('path', { d: path(i, A1, A0 + Math.PI * 2), stroke: '#E9EDF3', 'stroke-opacity': op, 'stroke-width': w, 'stroke-dasharray': dashes() }, g);
+      continue;
+    }
+    el('path', { d: path(i, t0, t1), stroke: '#E9EDF3', 'stroke-opacity': op, 'stroke-width': w, 'stroke-dasharray': dashes() }, g);
+  }
+
+  // ---- fishing line + hook ----
+  const hx = 868, hookTop = 452;          // hook eye
+  const lineG = el('g', { fill: 'none', 'stroke-linecap': 'round', 'stroke-linejoin': 'round' });
+  el('line', { x1: hx, y1: 0, x2: hx, y2: hookTop - 14, stroke: '#E9EDF3', 'stroke-opacity': .55, 'stroke-width': 1.2 }, lineG);
+  // eye
+  el('circle', { cx: hx, cy: hookTop - 7, r: 7, stroke: '#E9EDF3', 'stroke-width': 3 }, lineG);
+  // shank + bend + point with barb
+  const bendY = hookTop + 150, R = 34;
+  el('path', { d: `M${hx} ${hookTop} L${hx} ${bendY} A ${R} ${R} 0 0 1 ${hx - 2 * R} ${bendY} L${hx - 2 * R} ${bendY - 46}`,
+               stroke: '#E9EDF3', 'stroke-width': 5.2 }, lineG);
+  el('path', { d: `M${hx - 2 * R} ${bendY - 46} L${hx - 2 * R - 10} ${bendY - 22}`, stroke: '#E9EDF3', 'stroke-width': 4 }, lineG);
+
+  // ---- the red thread: follows ridge CUT from its broken end, then lifts to the hook bend ----
+  const [sx, sy] = pt(CUT, A1);                 // where the remaining ridge ends (lower right)
+  let d = '';
+  for (let t = A1; t >= A0; t -= .02) { const [x, y] = pt(CUT, t); d += (d ? 'L' : 'M') + fmt(x) + ' ' + fmt(y); }
+  const [ex, ey] = pt(CUT, A0);
+  const hookBottom = [hx - R, bendY + R - 2];
+  d += ` C ${fmt(ex + 60)} ${fmt(ey - 110)}, ${fmt(hookBottom[0] - 70)} ${fmt(hookBottom[1] + 120)}, ${fmt(hookBottom[0])} ${fmt(hookBottom[1])}`;
+  el('path', { d, fill: 'none', stroke: '#E2312B', 'stroke-width': 3, 'stroke-linecap': 'round' });
+  el('circle', { cx: fmt(sx), cy: fmt(sy), r: 4.5, fill: '#E2312B' });
+
+  // ---- quiet reference markers ----
+  const lab = (x, y, txt, anchor = 'start', fill = 'rgba(233,237,243,.5)') =>
+    el('text', { x, y, 'text-anchor': anchor, fill, 'font-family': 'JetBrains Mono, monospace', 'font-size': 13, 'letter-spacing': 3 }).textContent = txt;
+  // leader from the broken end
+  el('line', { x1: fmt(sx + 10), y1: fmt(sy + 6), x2: 900, y2: fmt(sy + 6), stroke: 'rgba(233,237,243,.35)', 'stroke-width': 1 });
+  lab(908, sy + 10, 'RIDGE 18/30');
+  lab(908, sy + 32, 'UNTRACED', 'start', '#E2312B');
+  // crosshair at core
+  const cc = el('g', { stroke: 'rgba(233,237,243,.35)', 'stroke-width': 1 });
+  el('line', { x1: cx - 340, y1: cy, x2: cx - 318, y2: cy }, cc);
+  el('line', { x1: cx + 318, y1: cy, x2: cx + 340, y2: cy }, cc);
+  el('line', { x1: cx, y1: cy + 360, x2: cx, y2: cy + 380 }, cc);
+  lab(cx - 346, cy + 4, 'ID', 'end');
+  lab(cx, cy + 404, 'SUBJECT : YOU', 'middle');
+})();
+</script>
+</body>
+</html>

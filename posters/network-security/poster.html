@@ -2,170 +2,139 @@
 <html lang="zh-CN">
 <head>
 <meta charset="utf-8">
-<title>别让一根线，牵走整个你</title>
+<title>找不同</title>
 <style>
   :root{
-    --bg:#0E1A2E; --bg2:#16233F;
-    --ink:#E9EDF3; --soft:rgba(233,237,243,.86); --dim:rgba(233,237,243,.55); --faint:rgba(233,237,243,.18);
-    --red:#E2312B;
+    --paper:#EFEBE3; --ink:#1C1C1E; --ink2:#55524C; --dim:#8E8A82; --line:rgba(28,28,30,.14);
+    --red:#D7261E;
     --serif:"Noto Serif SC",serif; --sans:"Noto Sans SC",sans-serif; --mono:"JetBrains Mono","IBM Plex Mono",monospace;
   }
   html,body{margin:0;background:#222}
   /* A3 @96dpi = 1123 x 1587 css px */
-  #poster{position:relative;width:1123px;height:1587px;overflow:hidden;
-    background:radial-gradient(120% 80% at 50% 62%, var(--bg2) 0%, var(--bg) 70%);
-    color:var(--ink);font-family:var(--sans);-webkit-font-smoothing:antialiased}
-  svg{position:absolute;inset:0}
+  #poster{position:relative;width:1123px;height:1587px;overflow:hidden;color:var(--ink);font-family:var(--sans);
+    background-color:var(--paper);
+    background-image:radial-gradient(rgba(28,28,30,.13) 1.1px, transparent 1.3px);
+    background-size:24px 24px;background-position:12px 12px;-webkit-font-smoothing:antialiased}
+  #ink{position:absolute;inset:0;pointer-events:none}
 
-  .eyebrow{position:absolute;left:104px;top:112px;font:400 17px/1 var(--mono);letter-spacing:.32em;color:var(--dim)}
+  .eyebrow{position:absolute;left:104px;right:104px;top:100px;display:flex;justify-content:space-between;
+    font:400 16px/1 var(--mono);letter-spacing:.3em;color:var(--ink2)}
   .eyebrow b{color:var(--red);font-weight:400}
-  .title{position:absolute;left:100px;top:166px;margin:0;font-family:var(--serif);font-weight:900;
-    font-size:92px;line-height:1.26;letter-spacing:.04em;color:var(--ink)}
-  .title .k{color:var(--red)}
-  .sub{position:absolute;left:104px;top:424px;font:400 33px/1.62 var(--sans);letter-spacing:.05em;color:var(--soft)}
-  .sub strong{font-weight:500;color:var(--ink)}
 
-  .foot{position:absolute;left:104px;right:104px;bottom:82px;border-top:1px solid var(--faint);padding-top:30px}
-  .tips{display:grid;grid-template-columns:repeat(3,1fr);gap:28px}
-  .tip{font:400 25px/1.3 var(--sans);letter-spacing:.04em;color:var(--ink)}
-  .tip i{display:block;font:400 14px/1 var(--mono);font-style:normal;letter-spacing:.24em;color:var(--red);margin-bottom:12px}
-  .mark{margin-top:26px;font:300 15px/1 var(--sans);letter-spacing:.2em;color:var(--dim)}
+  .title{position:absolute;left:96px;top:140px;margin:0;font:900 212px/1 var(--serif);letter-spacing:.02em}
+  .hint{position:absolute;right:104px;top:262px;text-align:right;font:400 26px/1.6 var(--sans);color:var(--ink2)}
+  .hint b{font-weight:500;color:var(--ink)}
+
+  /* ---- the two chat cards ---- */
+  .board{position:absolute;left:104px;right:104px;top:452px;display:grid;grid-template-columns:1fr 1fr;gap:51px}
+  .tag{font:400 15px/1 var(--mono);letter-spacing:.3em;color:var(--dim);margin-bottom:14px}
+  .card{background:#fff;border-radius:22px;overflow:hidden;box-shadow:0 1px 0 rgba(0,0,0,.05),0 18px 40px -24px rgba(30,25,15,.45);
+    border:1px solid rgba(28,28,30,.08)}
+  .bar{height:66px;display:grid;grid-template-columns:40px 1fr 40px;align-items:center;padding:0 18px;border-bottom:1px solid #ECECEE;
+    font:500 23px/1 var(--sans)}
+  .bar .back{font:300 34px/1 var(--sans);color:#3A3A3C}
+  .bar .name{text-align:center;letter-spacing:.06em}
+  .bar .more{text-align:right;font:700 20px/1 var(--sans);color:#3A3A3C}
+  .chat{background:#F2F2F4;padding:18px 22px 26px;height:452px;box-sizing:border-box}
+  .time{text-align:center;font:400 14px/1 var(--sans);color:#A2A2A8;margin:4px 0 20px}
+  .msg{display:flex;gap:12px;align-items:flex-start;margin-bottom:16px}
+  .av{flex:none;width:46px;height:46px;border-radius:9px;background:#7F93A8;color:#fff;display:grid;place-items:center;
+    font:500 22px/1 var(--sans)}
+  .bub{background:#fff;border-radius:4px 14px 14px 14px;padding:12px 16px;font:400 19.5px/1.55 var(--sans);color:#1C1C1E;max-width:300px}
+  .pay{background:#fff;border-radius:4px 14px 14px 14px;width:300px;overflow:hidden}
+  .pay .top{padding:14px 16px 12px;font:400 15px/1.5 var(--sans);color:#6B6B70}
+  .pay .top b{display:block;font:500 19px/1.5 var(--mono);color:#1C1C1E;letter-spacing:.04em}
+  .pay .bot{border-top:1px solid #EFEFF1;padding:9px 16px;font:400 13px/1 var(--sans);color:#A2A2A8}
+  .found{margin-top:16px;text-align:right;font:400 15px/1 var(--mono);letter-spacing:.24em;color:var(--dim)}
+  .found b{color:var(--red);font-weight:400}
+
+  /* ---- answer ---- */
+  .answer{position:absolute;left:104px;right:104px;top:1120px;border-top:2px solid var(--ink);padding-top:38px}
+  .answer p{margin:0}
+  .a1{font:400 40px/1.5 var(--serif);color:var(--ink2)}
+  .a2{font:900 50px/1.4 var(--serif);color:var(--ink);margin-top:2px}
+  .a2 em{font-style:normal;color:var(--red)}
+  .answer .a3{margin-top:34px;font:400 27px/1.5 var(--sans);color:var(--ink)}
+  .a3 b{font-weight:500;background:linear-gradient(transparent 62%, rgba(215,38,30,.22) 62%)}
+
+  .mark{position:absolute;left:104px;right:104px;bottom:70px;display:flex;justify-content:space-between;
+    font:300 15px/1 var(--sans);letter-spacing:.2em;color:var(--dim)}
   .mark span{font-family:var(--mono);letter-spacing:.24em}
 </style>
 </head>
 <body>
 <div id="poster">
-  <svg id="art" width="1123" height="1587" viewBox="0 0 1123 1587"></svg>
+  <div class="eyebrow"><span><b>●</b>&nbsp;网络安全 · 防范冒充导师诈骗</span><span>LEVEL 02</span></div>
 
-  <div class="eyebrow">CYBER&nbsp;SECURITY&nbsp;&nbsp;/&nbsp;&nbsp;<b>●</b>&nbsp;网络安全</div>
-  <h1 class="title">别让<span class="k">一根线</span>，<br>牵走整个你</h1>
-  <div class="sub">群里发来「研究生奖助金补录」链接？<br><strong>先从学校官网进入系统核实。</strong></div>
+  <h1 class="title">找不同</h1>
+  <div class="hint">下面两条消息<br><b>只有一处不一样</b></div>
 
-  <div class="foot">
-    <div class="tips">
-      <div class="tip"><i>01</i>熟人发的链接也要核实</div>
-      <div class="tip"><i>02</i>学号密码只在官网输入</div>
-      <div class="tip"><i>03</i>验证码，谁要都不给</div>
+  <div class="board">
+    <div>
+      <div class="tag">A</div>
+      <div class="card">
+        <div class="bar"><span class="back">‹</span><span class="name">王老师</span><span class="more">⋯</span></div>
+        <div class="chat">
+          <div class="time">今天 09:41</div>
+          <div class="msg"><div class="av">王</div><div class="bub">小张，在吗？</div></div>
+          <div class="msg"><div class="av">王</div><div class="bub">我在开会，不方便接电话。</div></div>
+          <div class="msg"><div class="av">王</div><div class="bub">有笔课题经费今天要付，你先帮我垫一下，下午就还你。</div></div>
+          <div class="msg"><div class="av">王</div><div class="pay"><div class="top">收款账户<b>6217 •••• •••• 3051</b></div><div class="bot">¥ 8,600.00</div></div></div>
+        </div>
+      </div>
     </div>
-    <div class="mark"><span>NO.02</span>　研究生安全海报设计大赛 · 参赛作品</div>
+    <div>
+      <div class="tag">B</div>
+      <div class="card">
+        <div class="bar"><span class="back">‹</span><span class="name">王老<span id="diff">帅</span></span><span class="more">⋯</span></div>
+        <div class="chat">
+          <div class="time">今天 09:41</div>
+          <div class="msg"><div class="av">王</div><div class="bub">小张，在吗？</div></div>
+          <div class="msg"><div class="av">王</div><div class="bub">我在开会，不方便接电话。</div></div>
+          <div class="msg"><div class="av">王</div><div class="bub">有笔课题经费今天要付，你先帮我垫一下，下午就还你。</div></div>
+          <div class="msg"><div class="av">王</div><div class="pay"><div class="top">收款账户<b>6217 •••• •••• 3051</b></div><div class="bot">¥ 8,600.00</div></div></div>
+        </div>
+      </div>
+      <div class="found">已找到&nbsp;<b>1</b>&nbsp;/&nbsp;1</div>
+    </div>
   </div>
+
+  <div class="answer">
+    <p class="a1">这一次，你找到了。</p>
+    <p class="a2">下一次，骗子连这个字<em>都会改对</em>。</p>
+    <p class="a3">导师让你转账？<b>先打电话，或当面问一句。</b></p>
+  </div>
+
+  <div class="mark"><span>NO.02　研究生安全海报设计大赛 · 参赛作品</span><span>ANSWER : 师 ≠ 帅</span></div>
+
+  <svg id="ink" width="1123" height="1587" viewBox="0 0 1123 1587"></svg>
 </div>
 
 <script>
-(() => {
+(async () => {
+  await document.fonts.ready;
   const NS = 'http://www.w3.org/2000/svg';
-  const svg = document.getElementById('art');
-  const el = (n, a, p = svg) => { const e = document.createElementNS(NS, n); for (const k in a) e.setAttribute(k, a[k]); p.appendChild(e); return e; };
-  const fmt = n => n.toFixed(1);
+  const ink = document.getElementById('ink');
+  const P = document.getElementById('poster').getBoundingClientRect();
+  const r = document.getElementById('diff').getBoundingClientRect();
+  const cx = r.left - P.left + r.width / 2 - .5, cy = r.top - P.top + r.height / 2 + 1;
+  const rx = r.width * 0.5 + 4, ry = r.height * 0.5 + 2;
 
-  // seeded random
-  let s = 20261104; const rnd = () => (s = (s * 1664525 + 1013904223) >>> 0) / 4294967296;
-
-  const cx = 540, cy = 985;              // fingerprint core
-  const N = 30, gap = 10.6;              // ridges
-  const CUT = 20;                        // the ridge being pulled out
-  const TP = -0.6, W = 0.27;            // where it is pulled (angle) and half-width of the pulled span
-
-  // ridge point: loop pattern — taller arch on top, flatter bottom, slight core drift
-  function base(i, t) {
-    const r = 14 + i * gap;
-    const drift = Math.max(0, 6 - i) * 1.6;
-    const sy = Math.sin(t) < 0 ? 1.34 : 1.02;
-    const wob = Math.sin(t * 3 + i * .9) * (1.2 + i * .05) + Math.sin(t * 5 - i * .4) * .8;
-    return [cx - drift + (r * .86 + wob) * Math.cos(t), cy + drift * .4 + (r * sy + wob) * Math.sin(t)];
+  // hand-drawn marker circle: one stroke, slightly more than a full turn, wobbling radius
+  let d = '';
+  const start = -2.2, turns = 2 * Math.PI * 1.12;
+  for (let k = 0; k <= 120; k++) {
+    const t = start + turns * k / 120;
+    const wob = 1 + Math.sin(t * 2.3 + .7) * .05 + Math.sin(t * 5.1) * .025 + k / 120 * .07;
+    const x = cx + rx * wob * Math.cos(t), y = cy + ry * wob * Math.sin(t) - Math.cos(t) * 2.5;
+    d += (k ? 'L' : 'M') + x.toFixed(1) + ' ' + y.toFixed(1);
   }
-
-  // where the hook holds the thread: pushed out from the pulled point, away from the core
-  const P0 = base(CUT, TP);
-  const dir = (() => { const dx = P0[0] - cx, dy = P0[1] - cy, l = Math.hypot(dx, dy); return [dx / l + .18, dy / l]; })();
-  const H = [P0[0] + dir[0] * 215, P0[1] + dir[1] * 215];
-
-  const wrap = a => { a = (a + Math.PI) % (2 * Math.PI); if (a < 0) a += 2 * Math.PI; return a - Math.PI; };
-  const bump = (dt, w) => Math.abs(dt) >= w ? 0 : (Math.cos(Math.PI * dt / w) + 1) / 2;
-  const pullK = i => {
-    if (i === CUT) return 1;
-    const d = i - CUT;
-    if (d < 0) return [0, .17, .075, .03][-d] || 0;   // inner neighbours drag outward
-    return [0, .085, .045, .02][d] || 0;               // outer neighbours bow toward the hook
-  };
-  function pt(i, t) {
-    const p = base(i, t), k = pullK(i);
-    if (!k) return p;
-    const b = bump(wrap(t - TP), i === CUT ? W : W * 1.15);
-    const e = i === CUT ? Math.pow(b, .9) : b * k;
-    return [p[0] + (H[0] - p[0]) * e, p[1] + (H[1] - p[1]) * e];
-  }
-
-  // the pulled span of the ridge, as points (for the red thread and for opening the gap)
-  const pulled = [];
-  for (let t = TP - W; t <= TP + W + 1e-9; t += .006) pulled.push(pt(CUT, t));
-  const nearThread = (p, r) => {
-    for (const q of pulled) if (Math.hypot(p[0] - q[0], p[1] - q[1]) < r) return true;
-    return false;
-  };
-
-  // data-like dash pattern
-  function dashes() {
-    const a = [];
-    for (let k = 0; k < 40; k++) {
-      const r = rnd();
-      if (r < .62) a.push(30 + rnd() * 120, 5 + rnd() * 5);
-      else if (r < .9) a.push(4 + rnd() * 6, 5 + rnd() * 4);
-      else a.push(1.5, 5);
-    }
-    return a.map(fmt).join(' ');
-  }
-  // sample a ridge into segments, skipping points the thread passes through
-  function segments(i, t0, t1, skip) {
-    const segs = []; let cur = [];
-    for (let t = t0; t <= t1 + 1e-9; t += .012) {
-      const p = pt(i, t);
-      if (skip(t, p)) { if (cur.length > 1) segs.push(cur); cur = []; continue; }
-      cur.push(p);
-    }
-    if (cur.length > 1) segs.push(cur);
-    return segs.map(seg => seg.map((p, k) => (k ? 'L' : 'M') + fmt(p[0]) + ' ' + fmt(p[1])).join(''));
-  }
-
-  const defs = el('defs', {});
-  const clip = el('clipPath', { id: 'pad' }, defs);
-  el('path', { d: `M${cx} ${cy - 400} C ${cx + 250} ${cy - 400}, ${cx + 300} ${cy - 120}, ${cx + 292} ${cy + 80}
-                   C ${cx + 284} ${cy + 250}, ${cx + 170} ${cy + 345}, ${cx} ${cy + 345}
-                   C ${cx - 170} ${cy + 345}, ${cx - 284} ${cy + 250}, ${cx - 292} ${cy + 80}
-                   C ${cx - 300} ${cy - 120}, ${cx - 250} ${cy - 400}, ${cx} ${cy - 400} Z` }, clip);
-  const fade = el('radialGradient', { id: 'fade', cx: cx, cy: cy - 40, r: 420, gradientUnits: 'userSpaceOnUse' }, defs);
-  el('stop', { offset: '0', 'stop-color': '#fff', 'stop-opacity': '1' }, fade);
-  el('stop', { offset: '.78', 'stop-color': '#fff', 'stop-opacity': '.85' }, fade);
-  el('stop', { offset: '1', 'stop-color': '#fff', 'stop-opacity': '0' }, fade);
-  const mask = el('mask', { id: 'soft' }, defs);
-  el('rect', { x: 0, y: 0, width: 1123, height: 1587, fill: 'url(#fade)' }, mask);
-
-  const g = el('g', { 'clip-path': 'url(#pad)', mask: 'url(#soft)', fill: 'none', 'stroke-linecap': 'round' });
-
-  for (let i = 0; i < N; i++) {
-    const op = .78 - i * .006, w = 2.6;
-    let t0 = TP + W, t1 = TP + W + Math.PI * 2;      // start right after the pulled span so the cut is clean
-    if (i < 6) { t0 = Math.PI * .72 + i * .02; t1 = Math.PI * 2.62 - i * .02; }
-    let skip = () => false;
-    if (i === CUT) { t0 = TP + W; t1 = TP - W + Math.PI * 2; }
-    else if (i > CUT) skip = (t, p) => Math.abs(wrap(t - TP)) < W * 1.3 && nearThread(p, 8);
-    for (const d of segments(i, t0, t1, skip))
-      el('path', { d, stroke: '#E9EDF3', 'stroke-opacity': op, 'stroke-width': w, 'stroke-dasharray': dashes() }, g);
-  }
-
-  // ---- fishing line + hook; the thread rests inside the bend ----
-  const R = 30, hx = H[0] + R, bendY = H[1] - R + 3, eyeY = bendY - 150;
-  const hg = el('g', { fill: 'none', 'stroke-linecap': 'round', 'stroke-linejoin': 'round', stroke: '#E9EDF3' });
-
-  // red thread first, so the hook steel sits over it
-  const red = pulled.map((p, k) => (k ? 'L' : 'M') + fmt(p[0]) + ' ' + fmt(p[1])).join('');
-  el('path', { d: red, fill: 'none', stroke: '#E2312B', 'stroke-width': 3, 'stroke-linecap': 'round', 'stroke-linejoin': 'round' });
-
-  el('line', { x1: hx, y1: 0, x2: hx, y2: eyeY - 7, 'stroke-opacity': .55, 'stroke-width': 1.2 }, hg);
-  el('circle', { cx: hx, cy: eyeY, r: 7, 'stroke-width': 3 }, hg);
-  el('path', { d: `M${fmt(hx)} ${fmt(eyeY + 7)} L${fmt(hx)} ${fmt(bendY)} A ${R} ${R} 0 0 1 ${fmt(hx - 2 * R)} ${fmt(bendY)} L${fmt(hx - 2 * R)} ${fmt(bendY - 44)}`,
-               'stroke-width': 5.2 }, hg);
-  el('path', { d: `M${fmt(hx - 2 * R)} ${fmt(bendY - 44)} L${fmt(hx - 2 * R - 10)} ${fmt(bendY - 21)}`, 'stroke-width': 4 }, hg);
+  const e = document.createElementNS(NS, 'path');
+  e.setAttribute('d', d); e.setAttribute('fill', 'none'); e.setAttribute('stroke', '#D7261E');
+  e.setAttribute('stroke-width', '4.5'); e.setAttribute('stroke-linecap', 'round'); e.setAttribute('stroke-linejoin', 'round');
+  e.setAttribute('opacity', '.92');
+  ink.appendChild(e);
+  document.body.dataset.ready = '1';
 })();
 </script>
 </body>

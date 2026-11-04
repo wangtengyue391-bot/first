@@ -11,6 +11,7 @@ const browser = await chromium.launch();
 const page = await browser.newPage({ viewport: { width: 1123, height: 1587 }, deviceScaleFactor: scale });
 await page.goto(pathToFileURL(path.join(dir, 'poster.html')).href, { waitUntil: 'networkidle' });
 await page.evaluate(() => document.fonts.ready);
+await page.waitForFunction(() => !document.querySelector('svg#ink') || document.body.dataset.ready === '1');
 await page.locator('#poster').screenshot({ path: path.join(dir, scale === 1 ? 'preview.png' : 'poster.png') });
 if (scale !== 1) {
   await page.addStyleTag({ content: '@page{size:297mm 420mm;margin:0} html,body{background:none}' });
